@@ -1,0 +1,22 @@
+{
+	"devDependencies": {
+		"jest": "^30.4.2",
+		"nodemon": "^3.1.14"
+	},
+	"dependencies": {
+		"node": "^26.1.0"
+	},
+	"name": "testinginnode",
+	"version": "1.0.0",
+	"description": "",
+	"main": "server.js",
+	"scripts": {
+		"test": "jest",
+		"start": "node server.js",
+		"dev": "nodemon server.js"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"type": "commonjs"
+}
