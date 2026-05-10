@@ -60,7 +60,7 @@ router.post('/', (req, res) => {
 		});
 	}
 
-	const newPokemon = { id: nextId++, name, type };
+	let newPokemon = { id: nextId++, name, type };
 	pokemon.push(newPokemon);
 	// 201 Created for new resources
 	res.status(201).json({
