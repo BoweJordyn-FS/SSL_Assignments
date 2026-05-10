@@ -6,10 +6,11 @@ let pokemon = [
 	{ id: 89, name: 'Charmander', type: 'Fire' },
 	{ id: 9, name: 'Squirtle', type: 'Water' },
 ];
-let nextId = pokemon.length + 1;
+let nextId = Math.max(...pokemon.map((p) => p.id)) + 1;
 
 // Get all Pokemon
 router.get('/', (req, res) => {
+	// 200 OK for successful retrieval
 	res.status(200).json({
 		message: 'Service is up',
 		data: pokemon,
@@ -22,8 +23,10 @@ router.get('/', (req, res) => {
 
 // Get Pokemon by id
 router.get('/:id', (req, res) => {
-	const { id } = req.params;
-	if (!pokemon) {
+	const id = parseInt(req.params.id);
+	const found = pokemon.find((p) => p.id === id);
+	if (!found) {
+		// 404 Not Found for not found
 		return res.status(404).json({
 			message: `Pokemon with id: ${id} not found`,
 			metadata: {
@@ -32,9 +35,10 @@ router.get('/:id', (req, res) => {
 			},
 		});
 	}
+	// 200 OK for successful retrieval
 	res.status(200).json({
 		message: `Service is up - You requested Pokemon with id: ${id}`,
-		data: pokemon[id],
+		data: found,
 		metadata: {
 			hostname: req.hostname,
 			method: req.method,
@@ -44,8 +48,9 @@ router.get('/:id', (req, res) => {
 
 // Add a new Pokemon
 router.post('/', (req, res) => {
-	const { nextid, name, type } = req.body;
+	const { name, type } = req.body;
 	if (!name || !type) {
+		// 400 Bad Request for missing required fields
 		return res.status(400).json({
 			message: 'Name and type are required to add a new Pokemon',
 			metadata: {
@@ -55,9 +60,9 @@ router.post('/', (req, res) => {
 		});
 	}
 
-	const newPokemon = { id: nextid++, name, type };
+	const newPokemon = { id: nextId++, name, type };
 	pokemon.push(newPokemon);
-
+	// 201 Created for new resources
 	res.status(201).json({
 		message: 'Service is up - New Pokemon added',
 		data: newPokemon,
@@ -70,10 +75,11 @@ router.post('/', (req, res) => {
 
 // Update a Pokemon by id
 router.put('/:id', (req, res) => {
-	const { id } = req.params;
+	const id = parseInt(req.params.id);
 	const { name, type } = req.body;
 
 	if (!name || !type) {
+		// 400 Bad Request for missing required fields
 		return res.status(400).json({
 			message: 'Name and type are required to update a Pokemon',
 			metadata: {
@@ -82,10 +88,21 @@ router.put('/:id', (req, res) => {
 			},
 		});
 	}
-	pokemon[id] = { name, type };
-	res.status(200).json({
+	const index = pokemon.findIndex((p) => p.id === id);
+	if (index === -1) {
+		return res.status(404).json({
+			message: `Pokemon with id: ${id} not found`,
+			metadata: {
+				hostname: req.hostname,
+				method: req.method,
+			},
+		});
+	}
+	pokemon[index] = { id, name, type };
+	// 202 Accepted for updates
+	res.status(202).json({
 		message: `Service is up - Pokemon with id: ${id} updated`,
-		data: pokemon[id],
+		data: pokemon[index],
 		metadata: {
 			hostname: req.hostname,
 			method: req.method,
@@ -95,10 +112,12 @@ router.put('/:id', (req, res) => {
 
 // Delete a Pokemon by id
 router.delete('/:id', (req, res) => {
-	const { id } = req.params;
-	const deletedPokemon = pokemon.splice(id, 1);
+	const id = parseInt(req.params.id);
+	const index = pokemon.findIndex((p) => p.id === id);
+	const deletedPokemon = index !== -1 ? pokemon.splice(index, 1) : [];
 
 	if (deletedPokemon.length === 0) {
+		// 404 Not Found for not found
 		return res.status(404).json({
 			message: `Pokemon with id: ${id} not found`,
 			metadata: {
@@ -107,8 +126,8 @@ router.delete('/:id', (req, res) => {
 			},
 		});
 	}
-
-	res.status(200).json({
+	// 202 Accepted for deletions
+	res.status(202).json({
 		message: `Service is up - Pokemon with id: ${id} deleted`,
 		data: deletedPokemon[0],
 		metadata: {
