@@ -2,9 +2,9 @@ const express = require('express');
 const router = express.Router();
 
 let pokemon = [
+	{ id: 9, name: 'Squirtle', type: 'Water' },
 	{ id: 45, name: 'Bulbasaur', type: 'Grass/Poison' },
 	{ id: 89, name: 'Charmander', type: 'Fire' },
-	{ id: 9, name: 'Squirtle', type: 'Water' },
 ];
 let nextId = Math.max(...pokemon.map((p) => p.id)) + 1;
 
