@@ -55,7 +55,7 @@ router.post('/', (req, res) => {
 		});
 	}
 
-	const newPokemon = { id: nextid++, name, type };
+	let newPokemon = { id: nextid++, name, type };
 	pokemon.push(newPokemon);
 
 	res.status(201).json({
