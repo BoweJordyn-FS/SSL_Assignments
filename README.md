@@ -9,7 +9,7 @@
 #### Week One
 
 - **1.5 NodeJS Coding Assignment**
-  - [Video]()
+  - [Video](https://youtu.be/TNuX9uzwiSE)
   - [Repo](https://github.com/BoweJordyn-FS/SSL_Assignments/tree/TestingInNodeJS/WeekOne/NodeJsCoding1.5)
 
 - **1.7 NodeJS Unit Testing**
