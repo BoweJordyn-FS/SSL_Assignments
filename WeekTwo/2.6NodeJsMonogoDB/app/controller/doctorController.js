@@ -10,16 +10,11 @@ const getAllDoctors = async (req, res) => {
 };
 
 const createDoctor = async (req, res) => {
+	const data = req.body;
 	try {
-		const { name, specialty, email, available } = req.body;
-		const doctor = new Doctors({
-			name,
-			specialty,
-			available,
-			email,
-		});
-		await doctor.save();
-		res.status(201).json({ success: true, data: doctor });
+		const newDoctor = await Doctors.create(data);
+		console.log('Doctor created successfully:', newDoctor);
+		res.status(201).json({ success: true, data: newDoctor });
 	} catch (error) {
 		console.error('Error creating doctor:', error.message);
 		res.status(500).json({ success: false, message: 'Server Error' });
