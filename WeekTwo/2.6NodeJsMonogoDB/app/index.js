@@ -10,5 +10,5 @@ app.get('/', (req, res) => {
 	res.status(200).json({ message: 'api is working', success: true });
 });
 
-app.use('/drapi/v1', routeHandler);
+app.use('/ClearMed/v1', routeHandler);
 module.exports = app;

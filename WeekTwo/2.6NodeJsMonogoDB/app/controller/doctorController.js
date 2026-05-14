@@ -1,0 +1,78 @@
+const Doctors = require('../models/Doctors');
+
+const getAllDoctors = async (req, res) => {
+	try {
+		const doctors = await Doctors.find();
+		res.status(200).json({ success: true, data: doctors });
+	} catch (error) {
+		res.status(500).json({ success: false, message: 'Server Error' });
+	}
+};
+
+const createDoctor = async (req, res) => {
+	try {
+		const { name, specialty, email, available } = req.body;
+		const doctor = new Doctors({
+			name,
+			specialty,
+			available,
+			email,
+		});
+		await doctor.save();
+		res.status(201).json({ success: true, data: doctor });
+	} catch (error) {
+		console.error('Error creating doctor:', error.message);
+		res.status(500).json({ success: false, message: 'Server Error' });
+	}
+};
+const getDoctorById = async (req, res) => {
+	try {
+		const doctor = await Doctors.findById(req.params.id);
+		if (!doctor) {
+			return res
+				.status(404)
+				.json({ success: false, message: 'Doctor not found' });
+		}
+		res.status(200).json({ success: true, data: doctor });
+	} catch (error) {
+		res.status(500).json({ success: false, message: 'Server Error' });
+	}
+};
+const updateDoctor = async (req, res) => {
+	try {
+		const doctor = await Doctors.findByIdAndUpdate(req.params.id, req.body, {
+			new: true,
+		});
+		if (!doctor) {
+			return res
+				.status(404)
+				.json({ success: false, message: 'Doctor not found' });
+		}
+		res.status(200).json({ success: true, data: doctor });
+	} catch (error) {
+		res.status(500).json({ success: false, message: 'Server Error' });
+	}
+};
+const deleteDoctor = async (req, res) => {
+	try {
+		const doctor = await Doctors.findByIdAndDelete(req.params.id);
+		if (!doctor) {
+			return res
+				.status(404)
+				.json({ success: false, message: 'Doctor not found' });
+		}
+		res
+			.status(200)
+			.json({ success: true, message: 'Doctor deleted successfully' });
+	} catch (error) {
+		res.status(500).json({ success: false, message: 'Server Error' });
+	}
+};
+
+module.exports = {
+	getAllDoctors,
+	createDoctor,
+	getDoctorById,
+	updateDoctor,
+	deleteDoctor,
+};
