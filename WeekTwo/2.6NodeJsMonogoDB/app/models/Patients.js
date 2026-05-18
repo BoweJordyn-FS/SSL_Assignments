@@ -2,11 +2,6 @@ const mongoose = require('mongoose');
 
 const patientSchema = new mongoose.Schema(
 	{
-		pcp: {
-			type: mongoose.Schema.Types.ObjectId,
-			ref: 'Doctor',
-			required: true,
-		},
 		name: {
 			type: String,
 			required: true,
@@ -16,6 +11,7 @@ const patientSchema = new mongoose.Schema(
 			required: true,
 			min: [new Date('1900-01-01'), 'Date must be after 1900'],
 			max: [Date.now, 'Date cannot be in the future'],
+			get: (val) => (val ? val.toISOString().split('T')[0] : null),
 		},
 		gender: {
 			type: String,
@@ -30,8 +26,13 @@ const patientSchema = new mongoose.Schema(
 			type: Boolean,
 			required: true,
 		},
+		doctor_id: {
+			type: mongoose.Schema.Types.ObjectId,
+			ref: 'Doctors',
+			required: true,
+		},
 	},
-	{ timestamps: true },
+	{ timestamps: true, toJSON: { getters: true } },
 );
 
 const Patients = mongoose.model('Patient', patientSchema);

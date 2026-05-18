@@ -10,18 +10,11 @@ const getAllPatients = async (req, res) => {
 };
 
 const createPatient = async (req, res) => {
+	const data = req.body;
 	try {
-		const { pcp, name, dob, gender, new_Patient, insurance } = req.body;
-		const patient = new Patients({
-			pcp,
-			name,
-			dob,
-			gender,
-			new_Patient,
-			insurance,
-		});
-		await patient.save();
-		res.status(201).json({ success: true, data: patient });
+		const newPatient = await Patients.create(data);
+		console.log('The patient created successfully:', newPatient);
+		res.status(201).json({ success: true, data: newPatient });
 	} catch (error) {
 		res.status(500).json({ success: false, message: 'Server Error' });
 	}
@@ -42,7 +35,7 @@ const getPatientById = async (req, res) => {
 const updatePatient = async (req, res) => {
 	try {
 		const patient = await Patients.findByIdAndUpdate(req.params.id, req.body, {
-			new: true,
+			returnDocument: 'after',
 		});
 		if (!patient) {
 			return res

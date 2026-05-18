@@ -36,14 +36,14 @@ const getDoctorById = async (req, res) => {
 const updateDoctor = async (req, res) => {
 	try {
 		const doctor = await Doctors.findByIdAndUpdate(req.params.id, req.body, {
-			new: true,
+			returnDocument: 'after',
 		});
 		if (!doctor) {
 			return res
 				.status(404)
 				.json({ success: false, message: 'Doctor not found' });
 		}
-		res.status(200).json({ success: true, data: doctor });
+		res.status(202).json({ success: true, data: doctor });
 	} catch (error) {
 		res.status(500).json({ success: false, message: 'Server Error' });
 	}
